@@ -1,30 +1,24 @@
 using EventManagement.Api.Models;
 using EventManagement.Api.Repositories;
 
-
-public class UserService : IUserService
+namespace EventManagement.Api.Services
 {
-    private readonly IUserRepository _repository;
-
-    public UserService(IUserRepository repository)
+    public class UserService : IUserService
     {
-        _repository = repository;
-    }
+        private readonly IUserRepository _repository;
 
-    public async Task<IEnumerable<User>> GetAllAsync()
-    {
-        return await _repository.GetAllAsync();
-    }
+        public UserService(IUserRepository repository)
+        {
+            _repository = repository;
+        }
 
-    public async Task<User?> GetByIdAsync(int id)
-    {
-        return await _repository.GetByIdAsync(id);
-    }
+        public Task<IEnumerable<User>> GetAllAsync()
+            => _repository.GetAllAsync();
 
-    public async Task<User> CreateAsync(User user)
-    {
-        await _repository.AddAsync(user);
-        await _repository.SaveChangesAsync();
-        return user;
+        public Task<User?> GetByIdAsync(int id)
+            => _repository.GetByIdAsync(id);
+
+        public Task<User> CreateAsync(User user)
+            => _repository.AddAsync(user);
     }
 }

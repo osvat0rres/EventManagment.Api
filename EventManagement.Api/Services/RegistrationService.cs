@@ -1,27 +1,26 @@
 using EventManagement.Api.Models;
 using EventManagement.Api.Repositories;
 
-
-public class RegistrationService : IRegistrationService
+namespace EventManagement.Api.Services
 {
-    private readonly IRegistrationRepository _repository;
-
-    public RegistrationService(IRegistrationRepository repository)
+    public class RegistrationService : IRegistrationService
     {
-        _repository = repository;
-    }
+        private readonly IRegistrationRepository _repository;
 
-    public async Task<Registration> CreateAsync(int eventId, int userId)
-    {
-        var registration = new Registration
+        public RegistrationService(IRegistrationRepository repository)
         {
-            EventId = eventId,
-            UserId = userId
-        };
+            _repository = repository;
+        }
 
-        await _repository.AddAsync(registration);
-        await _repository.SaveChangesAsync();
+        public async Task<Registration> RegisterAsync(int eventId, int userId)
+        {
+            var registration = new Registration
+            {
+                EventId = eventId,
+                UserId = userId
+            };
 
-        return registration;
+            return await _repository.AddAsync(registration);
+        }
     }
 }

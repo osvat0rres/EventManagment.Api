@@ -1,25 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
-using EventManagement.Api.Models;
 using EventManagement.Api.Services;
 
-
-
-[ApiController]
-[Route("api/events/{eventId}/registrations")]
-public class RegistrationsController : ControllerBase
+namespace EventManagement.Api.Controllers
 {
-    private readonly IRegistrationService _service;
-
-    public RegistrationsController(IRegistrationService service)
+    [ApiController]
+    [Route("api/events/{eventId}/registrations")]
+    public class RegistrationsController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly IRegistrationService _service;
 
-    [HttpPost]
-    public async Task<ActionResult> Create(int eventId, [FromBody] int userId)
-    {
-        var registration = await _service.CreateAsync(eventId, userId);
+        public RegistrationsController(IRegistrationService service)
+        {
+            _service = service;
+        }
 
-        return StatusCode(201, registration);
+        [HttpPost]
+        public async Task<IActionResult> Register(
+            int eventId,
+            [FromBody] int userId)
+        {
+            var registration =
+                await _service.RegisterAsync(eventId, userId);
+
+            return Created("", registration);
+        }
     }
 }

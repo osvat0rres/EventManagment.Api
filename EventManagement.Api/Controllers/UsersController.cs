@@ -2,44 +2,47 @@ using Microsoft.AspNetCore.Mvc;
 using EventManagement.Api.Models;
 using EventManagement.Api.Services;
 
-
-[ApiController]
-[Route("api/[controller]")]
-public class UsersController : ControllerBase
+namespace EventManagement.Api.Controllers
 {
-    private readonly IUserService _service;
-
-    public UsersController(IUserService service)
+    [ApiController]
+    [Route("api/users")]
+    public class UsersController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly IUserService _service;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetAll()
-    {
-        var users = await _service.GetAllAsync();
-        return Ok(users); // 200
-    }
+        public UsersController(IUserService service)
+        {
+            _service = service;
+        }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetById(int id)
-    {
-        var user = await _service.GetByIdAsync(id);
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _service.GetAllAsync());
+        }
 
-        if (user == null)
-            return NotFound(); // 404
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var user = await _service.GetByIdAsync(id);
 
-        return Ok(user); // 200
-    }
+            if (user == null)
+                return NotFound();
 
-    [HttpPost]
-    public async Task<ActionResult<User>> Create(User user)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState); // 400
+            return Ok(user);
+        }
 
-        var createdUser = await _service.CreateAsync(user);
+        [HttpPost]
+        public async Task<IActionResult> Create(User user)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser); // 201
+            var created = await _service.CreateAsync(user);
+
+            return CreatedAtAction(nameof(GetById),
+                new { id = created.Id },
+                created);
+        }
     }
 }
