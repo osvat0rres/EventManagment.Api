@@ -1,7 +1,7 @@
 # Event Management and Registration System
 # CPSC 449 – Web Back-End Engineering  
 ## ASP.NET Core Backend Project
-
+Currentlry working....
 This repository is the **starter and evolving codebase** for the CPSC 449 Web Back-End Engineering course.
 
 Over the course, we will incrementally build a real-world ASP.NET Core Web API by:
